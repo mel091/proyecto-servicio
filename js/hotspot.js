@@ -13,8 +13,9 @@ function init() {
         init: function() {
             const el = this.el;
             const data = this.data;
+            const imgSrc = el.classList.contains('atras') ? '#atras' : el.classList.contains('adelante') ? '#adelante' : null;
 
-            el.setAttribute('src', '#hotspot');
+            el.setAttribute('src', imgSrc);
             el.setAttribute('look-at', '#cam');
             el.addEventListener('click', function(e) {
             const sky = document.querySelector('#sky');
@@ -47,47 +48,94 @@ function init() {
         }
     });
 }
-
-window.addEventListener('load', function() {
-    init()
-}); 
-
 AFRAME.registerComponent('visibilidad', {
+    schema: {
+        openImageId: {type: 'string', default: ''},
+        imageId: {type: 'string', default: ''},
+        closeId: {type: 'string', default: ''}
+    },
     init: function () {
-        const openImage = document.querySelector('#open');
-        const hsp1Image = document.querySelector('#hsp1-image');
-        const closeButton = hsp1Image.querySelector('#close');
+        const openImage = document.querySelector(`#${this.data.openImageId}`);
+        const hspImage = document.querySelector(`#${this.data.imageId}`);
+        const closeButton = hspImage.querySelector(`#${this.data.closeId}`);
 
         openImage.addEventListener('mouseenter', () => {
             openImage.setAttribute('visible', 'false');
-            hsp1Image.setAttribute('visible', 'true');
+            hspImage.setAttribute('visible', 'true');
         });
 
         closeButton.addEventListener('mouseenter', () => {
             openImage.setAttribute('visible', 'true');
-            hsp1Image.setAttribute('visible', 'false');
+            hspImage.setAttribute('visible', 'false');
         });
     }
 });
-AFRAME.registerComponent('visibilidad2', {
-    init: function () {
-        const openImage = document.querySelector('#open2');
-        const hsp1Image = document.querySelector('#hsp1-image2');
-        const closeButton = hsp1Image.querySelector('#close2');
-
-        openImage.addEventListener('mouseenter', () => {
-            openImage.setAttribute('visible', 'false');
-            hsp1Image.setAttribute('visible', 'true');
-        });
-
-        closeButton.addEventListener('mouseenter', () => {
-            openImage.setAttribute('visible', 'true');
-            hsp1Image.setAttribute('visible', 'false');
-        });
+    function autoPlayVideos(videoIds) {
+    videoIds.forEach(id => {
+        const videoElement = document.getElementById(id);
+        if (videoElement) {
+            videoElement.addEventListener('loadeddata', () => {
+                videoElement.play();
+            });
+        } else {
+            console.warn(`El elemento con ID "${id}" no se encontró.`);
+        }
+    });
     }
-});
-
-function cambiarTexto(sceneId){
+    autoPlayVideos(['video', 'atras', 'adelante']);
+    
+    AFRAME.registerComponent('carousel', {
+        init: function () {
+    
+          this.slides = [
+            {
+              image: '#hsp2',
+              title: 'El junco',
+              description: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id laborum."'
+            },
+            {
+              image: '#hsp3',
+              title: 'El lorem',
+              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            },
+            {
+              image: '#hsp4',
+              title: 'El lurin',
+              description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+            }
+          ];
+      
+          this.currentIndex = 0;
+          this.updateSlide();
+      
+          const nextButton = this.el.querySelector('.carousel-next');
+          const prevButton = this.el.querySelector('.carousel-prev');
+      
+          nextButton.addEventListener('mouseenter', () => this.nextSlide());
+          prevButton.addEventListener('mouseenter', () => this.prevSlide());
+        },
+      
+        updateSlide: function () {
+          const currentSlide = this.slides[this.currentIndex];
+          const imageEl = this.el.querySelector('#carousel-image');
+          const titleEl = this.el.querySelector('#carousel-title');
+          const descriptionEl = this.el.querySelector('#carousel-description');
+    
+          imageEl.setAttribute('src', currentSlide.image);
+          titleEl.setAttribute('value', currentSlide.title);
+          descriptionEl.setAttribute('value', currentSlide.description);
+        },
+        nextSlide: function () {
+          this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+          this.updateSlide();
+        },
+        prevSlide: function () {
+          this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+          this.updateSlide();
+        }
+      });
+    
+    function cambiarTexto(sceneId){
     const scenes = {
         'point1': 'Escenario 1',
         'point2': 'Escenario 2',
@@ -100,3 +148,6 @@ function cambiarTexto(sceneId){
     texto.setAttribute('value', scenes[sceneId]);
 
 }
+window.addEventListener('load', function() {
+    init()
+}); 
