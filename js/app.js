@@ -21,7 +21,7 @@ const init = function() {
             lat: 24.1383,
             lng: -110.3475,
             name: 'Manglar el Conchalito',
-            link: '#',
+            link: 'conchalito.html',
         },
         {
             lat: 23.6200,
