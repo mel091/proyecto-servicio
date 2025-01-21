@@ -22,8 +22,18 @@ function init() {
             el.addEventListener('click', function (e) {
                 const sky = document.querySelector('#sky');
                 sky.setAttribute('src', data.linkto);
+                const opcion = document.querySelector('#surgidero, #balandra, #conchalito');
 
-                cambiarTextoConAudio(data.linkto.replace('#', ''));
+                if(opcion) {
+                    const id = opcion.id;
+                    if(id === "surgidero") {
+                        cambiarTexto(data.linkto.replace('#', ''));
+                    } else if(id === "balandra") {
+                        cambiarTextBal(data.linkto.replace('#', ''));
+                    } else if(id === "conchalito") {
+                        cambiarTextoConAudio(data.linkto.replace('#', ''));
+                    }
+                }
 
                 const spotComp = document.querySelector('#spots');
                 const currentSpot = this.parentElement.getAttribute('id');
@@ -131,7 +141,18 @@ AFRAME.registerComponent('carousel', {
         this.updateSlide();
     }
 });
+function cambiarTextBal(sceneId) {
+    const scenes = {
+        'pointBal1': 'Escenario 1',
+        'pointBal2': 'Escenario 2',
+        'pointBal3': 'Escenario 3',
+        'pointBal4': 'Escenario 4',
+        'pointBal5': 'Escenario 5'
+    };
 
+    const texto = document.querySelector('#scene-value');
+    texto.setAttribute('value', scenes[sceneId]);
+}
 function cambiarTexto(sceneId) {
     const scenes = {
         'point1': 'Escenario 1',

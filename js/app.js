@@ -15,7 +15,8 @@ const init = function() {
             lat: 24.3206,
             lng: -110.3192,
             name: 'Manglar Balandra',
-            link: '#',
+            bg: 'balandra-cover.jpg',
+            link: 'balandra.html',
         },
         {
             lat: 24.1383,
